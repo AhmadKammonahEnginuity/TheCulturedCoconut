@@ -1,0 +1,166 @@
+[
+    {
+        "id": "5309368b41312e48",
+        "type": "tab",
+        "label": "Flow 3",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "40abd27a4f742a8b",
+        "type": "serial in",
+        "z": "5309368b41312e48",
+        "name": "xxx",
+        "serial": "861752f6270127a7",
+        "x": 150,
+        "y": 200,
+        "wires": [
+            [
+                "3bd3a59ee36a2b2e"
+            ]
+        ]
+    },
+    {
+        "id": "3bd3a59ee36a2b2e",
+        "type": "function",
+        "z": "5309368b41312e48",
+        "name": "Temp",
+        "func": "var temp1 = parseInt(msg.payload[3]);\nvar temp2 = parseInt(msg.payload[4]);\n\n\n// Check if the result is NaN and handle it accordingly\ntemp1 = isNaN(temp1) ? null : temp1 - 48;\ntemp2 = isNaN(temp2) ? null : temp2 - 48;\n\n\n// Check if any value is null and ignore it from the calculation\nif (temp1 !== null && temp2 !== null) {\n    var result = (temp1 * 10) + (temp2 * 1);\n    var result1 = { payload: result };\n    global.set('temperature', result);  // Store the temperature in a global variable\n    return [result1];\n} else {\n    return null; // or any other action you want to take when NaN values are encountered\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1604bffd9f892de3",
+        "type": "inject",
+        "z": "5309368b41312e48",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "Hello, Hope it works",
+        "payloadType": "str",
+        "x": 710,
+        "y": 120,
+        "wires": [
+            [
+                "d04c7f4e3815db86"
+            ]
+        ]
+    },
+    {
+        "id": "d04c7f4e3815db86",
+        "type": "function",
+        "z": "5309368b41312e48",
+        "name": "Format Email Content",
+        "func": "var temp = global.get('temperature');  // Retrieve the temperature from the global variable\nvar additionalText = \"Here is the latest temperature reading:\";\n\nmsg.payload = additionalText + \"\\nTemperature: \" + temp + \" °C\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 950,
+        "y": 200,
+        "wires": [
+            [
+                "68fc0a013f1d7aed",
+                "1cf49899c01d7821"
+            ]
+        ]
+    },
+    {
+        "id": "68fc0a013f1d7aed",
+        "type": "email-send",
+        "z": "5309368b41312e48",
+        "transport": "c42afcdf840fc222",
+        "from": "mazenarabe3@gmail.com",
+        "to": "mazen.abdalla@dal.ca",
+        "cc": "",
+        "bcc": "",
+        "subject": "TestingNew",
+        "contentType": "text",
+        "priority": "normal",
+        "name": "",
+        "x": 1170,
+        "y": 120,
+        "wires": [
+            [
+                "ea7a7e9bd04d14bf"
+            ]
+        ]
+    },
+    {
+        "id": "ea7a7e9bd04d14bf",
+        "type": "debug",
+        "z": "5309368b41312e48",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1250,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "1cf49899c01d7821",
+        "type": "debug",
+        "z": "5309368b41312e48",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1010,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "861752f6270127a7",
+        "type": "serial-port",
+        "name": "",
+        "serialport": "COM6",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "newline": "\\n",
+        "bin": "bin",
+        "out": "char",
+        "addchar": "false",
+        "responsetimeout": ""
+    },
+    {
+        "id": "c42afcdf840fc222",
+        "type": "email-transport",
+        "name": "emaill",
+        "host": "smtp.gmail.com",
+        "port": "465",
+        "secure": true,
+        "authType": "login",
+        "proxy": ""
+    }
+]
